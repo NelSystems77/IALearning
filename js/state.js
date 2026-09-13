@@ -17,7 +17,8 @@ function defaultState() {
     lastActiveDate: null,
     createdAt: null,
     heroProject: null,        // { idea, tool, trigger, action } del Proyecto Final
-    heroProjectDone: false
+    heroProjectDone: false,
+    heroCompletedAt: null     // fecha ISO en que se completó el Proyecto Final (para la insignia descargable)
   };
 }
 

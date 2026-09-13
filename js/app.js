@@ -531,6 +531,7 @@ function finishProject() {
 
   state.heroProject = { idea, tool, trigger, action };
   state.heroProjectDone = true;
+  state.heroCompletedAt = state.heroCompletedAt || new Date().toISOString();
   state.xp += FINAL_PROJECT.xp;
   unlockAchievement('b_project', false);
   unlockAchievement('b_hero', false);
@@ -585,6 +586,20 @@ $('btn-copy-sinpe').addEventListener('click', async () => {
     btn.textContent = sinpeNumber;
   }
   setTimeout(() => { btn.textContent = originalLabel; }, 2000);
+});
+
+$('btn-download-badge').addEventListener('click', async () => {
+  const btn = $('btn-download-badge');
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Generando insignia...';
+  try {
+    await downloadBadge(state);
+  } catch (e) {
+    showToast('😕', 'No se pudo generar la insignia', 'Intenta de nuevo en unos segundos.');
+  }
+  btn.disabled = false;
+  btn.textContent = originalLabel;
 });
 
 // ---------------- TOAST ----------------

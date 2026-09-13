@@ -9,6 +9,7 @@ Plataforma web inmersiva, mobile-first, para aprender los fundamentos del uso de
 - **Gamificación**: XP, rangos, rachas de días, insignias coleccionables y un certificado final "Hero".
 - **Constructor visual de automatizaciones** ("Cuando ___, entonces la IA debe ___") sin necesidad de programar.
 - **Proyecto Final (capstone)**: al completar los 5 mundos, el usuario diseña su propio proyecto real (idea propia, herramienta, automatización y una pregunta de pensamiento crítico), que queda reflejado en su certificado.
+- **Insignia descargable**: una medalla en PNG (generada en el navegador con `<canvas>`) con el nombre del usuario, el robot mascota y el logo de NelSystems integrado de forma discreta, lista para compartir en redes o guardar como recuerdo.
 - **100% en el navegador**: sin backend ni cuentas. El progreso se guarda en el dispositivo (`localStorage`).
 - **Instalable como app (PWA)**: funciona sin conexión gracias a un service worker.
 
@@ -20,6 +21,7 @@ css/styles.css       Estilos (tema robot/IA, mobile-first)
 js/content.js         Currículo: mundos, misiones, insignias, rangos, frases del robot
 js/state.js          Manejo del progreso (localStorage)
 js/robot.js          Mascota robot en SVG con expresiones
+js/badge.js          Generador de la insignia descargable (canvas → PNG)
 js/app.js            Lógica de navegación e interacción
 manifest.json        Configuración PWA
 sw.js                Service worker (modo offline)
