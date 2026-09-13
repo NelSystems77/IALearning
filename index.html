@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zero to Hero IA</title>
+<meta name="description" content="Aprende Inteligencia Artificial desde cero, paso a paso, con un compañero robot que te acompaña hasta convertirte en un Hero de la IA.">
+<meta name="theme-color" content="#0b0f1a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/icon.svg">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ONBOARDING -->
+  <section id="screen-onboarding" class="screen">
+    <div style="text-align:center; padding-top: 8vh;">
+      <div id="onboarding-robot"></div>
+      <h1 style="margin-top:18px; font-size:24px;">Zero to Hero IA</h1>
+      <p class="muted">Aprende a usar la Inteligencia Artificial desde cero, sin tecnicismos, a tu propio ritmo.</p>
+    </div>
+    <div class="speech-bubble">
+      <p style="margin:0;">¡Hola! Soy tu compañero robot y te voy a acompañar en esta aventura. Antes de empezar, ¿cómo te llamas?</p>
+    </div>
+    <input type="text" id="input-name" placeholder="Escribe tu nombre aquí" maxlength="24" autocomplete="off">
+    <button class="btn" id="btn-start">Comenzar mi aventura 🚀</button>
+    <p class="muted" style="text-align:center; font-size:12px; margin-top:16px;">Tu progreso se guarda solo en este dispositivo.</p>
+  </section>
+
+  <!-- MAPA DE MUNDOS -->
+  <section id="screen-map" class="screen">
+    <div class="topbar">
+      <div class="greeting">
+        <h2 id="map-greeting">¡Hola!</h2>
+        <div class="streak-pill" id="map-streak">🔥 0 días</div>
+      </div>
+      <div class="xp-pill" id="map-xp-pill">⚡ 0 XP</div>
+    </div>
+
+    <div class="speech-row">
+      <div id="map-robot"></div>
+      <div class="speech-bubble">
+        <p id="map-robot-tip" style="margin:0; font-size:14px;">Cargando...</p>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div style="display:flex; justify-content:space-between; font-size:12px;" class="muted">
+        <span id="map-rank-name">Rango</span>
+        <span id="map-rank-next"></span>
+      </div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="map-xp-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="section-title">Tu ruta de aprendizaje</div>
+    <div id="world-list"></div>
+
+    <div id="certificate-card-slot"></div>
+  </section>
+
+  <!-- MUNDO (lista de misiones) -->
+  <section id="screen-world" class="screen">
+    <button class="btn ghost" id="btn-world-back" style="width:auto; padding:8px 14px; margin-bottom:10px;">← Volver</button>
+    <h2 id="world-title">Mundo</h2>
+    <p class="muted" id="world-subtitle"></p>
+    <div class="xp-bar-track"><div class="xp-bar-fill" id="world-progress-fill" style="width:0%"></div></div>
+    <div class="section-title">Misiones</div>
+    <div id="mission-list"></div>
+  </section>
+
+  <!-- MISIÓN (lección + quiz o builder) -->
+  <section id="screen-mission" class="screen">
+    <button class="btn ghost" id="btn-mission-back" style="width:auto; padding:8px 14px; margin-bottom:10px;">← Volver</button>
+    <h2 id="mission-title">Misión</h2>
+    <div class="speech-row">
+      <div id="mission-robot"></div>
+      <div class="speech-bubble">
+        <div id="mission-content"></div>
+      </div>
+    </div>
+
+    <div id="mission-interactive"></div>
+  </section>
+
+  <!-- LOGROS -->
+  <section id="screen-achievements" class="screen">
+    <h2>Tus Insignias</h2>
+    <p class="muted">Colecciónalas todas completando tu aventura.</p>
+    <div class="badge-grid" id="badge-grid"></div>
+  </section>
+
+  <!-- PERFIL -->
+  <section id="screen-profile" class="screen">
+    <h2>Tu Perfil</h2>
+    <div class="speech-row">
+      <div id="profile-robot"></div>
+      <div class="speech-bubble">
+        <p style="margin:0;" id="profile-rank-line">Rango</p>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="value" id="profile-xp">0</div><div class="label">XP total</div></div>
+      <div class="stat-box"><div class="value" id="profile-missions">0</div><div class="label">Misiones</div></div>
+      <div class="stat-box"><div class="value" id="profile-streak">0</div><div class="label">Racha (días)</div></div>
+    </div>
+
+    <div class="section-title">Cambiar tu nombre</div>
+    <input type="text" id="input-name-edit" maxlength="24">
+    <button class="btn secondary" id="btn-save-name">Guardar nombre</button>
+
+    <div class="section-title">Zona de reinicio</div>
+    <button class="btn ghost" id="btn-reset">Reiniciar todo mi progreso</button>
+  </section>
+
+  <!-- CERTIFICADO -->
+  <section id="screen-certificate" class="screen">
+    <button class="btn ghost" id="btn-cert-back" style="width:auto; padding:8px 14px; margin-bottom:10px;">← Volver</button>
+    <div class="certificate">
+      <div style="font-size:40px;">🏆</div>
+      <h2>Certificado Zero to Hero</h2>
+      <div class="user-name" id="cert-name">Nombre</div>
+      <p class="sub">Completó todo el camino de aprendizaje de Inteligencia Artificial<br>y se convirtió en un verdadero <b>Hero de la IA</b>.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn secondary" id="btn-cert-share">Compartir logro 🎉</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- Barra de navegación inferior -->
+<nav class="bottom-nav" id="bottom-nav" style="display:none;">
+  <div class="bottom-nav-inner">
+    <button class="nav-btn" data-nav="map"><span class="nav-icon">🗺️</span>Inicio</button>
+    <button class="nav-btn" data-nav="achievements"><span class="nav-icon">🎖️</span>Logros</button>
+    <button class="nav-btn" data-nav="profile"><span class="nav-icon">🙂</span>Perfil</button>
+  </div>
+</nav>
+
+<!-- Overlay de celebración -->
+<div class="toast-overlay" id="toast-overlay">
+  <div class="toast-card">
+    <div class="icon" id="toast-icon">🎉</div>
+    <h2 id="toast-title">¡Felicidades!</h2>
+    <p id="toast-message" class="muted"></p>
+    <button class="btn" id="toast-close">Continuar</button>
+  </div>
+</div>
+
+<script src="js/content.js"></script>
+<script src="js/state.js"></script>
+<script src="js/robot.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
