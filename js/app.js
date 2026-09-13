@@ -574,6 +574,19 @@ $('btn-cert-share').addEventListener('click', async () => {
   }
 });
 
+$('btn-copy-sinpe').addEventListener('click', async () => {
+  const sinpeNumber = '87409343';
+  const btn = $('btn-copy-sinpe');
+  const originalLabel = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(sinpeNumber);
+    btn.textContent = '¡Copiado! ✅';
+  } catch (e) {
+    btn.textContent = sinpeNumber;
+  }
+  setTimeout(() => { btn.textContent = originalLabel; }, 2000);
+});
+
 // ---------------- TOAST ----------------
 
 function showToast(icon, title, message) {
