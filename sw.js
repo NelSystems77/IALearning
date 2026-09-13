@@ -1,5 +1,5 @@
 // Service worker simple: cachea el "app shell" para que funcione sin conexión.
-const CACHE_NAME = 'zero-to-hero-ia-v1';
+const CACHE_NAME = 'zero-to-hero-ia-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,7 +9,7 @@ const APP_SHELL = [
   './js/robot.js',
   './js/app.js',
   './manifest.json',
-  './assets/icons/icon.svg'
+  './assets/icons/logo-nelsystems.png'
 ];
 
 self.addEventListener('install', event => {
