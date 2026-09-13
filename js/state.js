@@ -15,7 +15,9 @@ function defaultState() {
     perfectWorlds: [],        // ids de mundos completados sin fallar ninguna respuesta
     streak: 0,
     lastActiveDate: null,
-    createdAt: null
+    createdAt: null,
+    heroProject: null,        // { idea, tool, trigger, action } del Proyecto Final
+    heroProjectDone: false
   };
 }
 

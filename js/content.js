@@ -468,12 +468,12 @@ const CONTENT = {
         },
         {
           id: 'w5m5',
-          title: 'Proyecto final: tu automatización Hero',
+          title: 'Última práctica antes del Proyecto Final',
           xp: 25,
           type: 'builder',
           content: [
-            '¡Última misión! Ahora vas a diseñar la automatización que más te gustaría tener en tu vida real.',
-            'Piensa en algo que realmente te ahorraría tiempo, y arma tu receta final.'
+            '¡Ya casi terminas este mundo! Ahora vas a diseñar la automatización que más te gustaría tener en tu vida real.',
+            'Piensa en algo que realmente te ahorraría tiempo, y arma tu receta. Al terminar este mundo, te espera tu Proyecto Final.'
           ],
           builder: {
             triggerLabel: 'Cuando...',
@@ -505,8 +505,48 @@ const SPECIAL_ACHIEVEMENTS = [
   { id: 'b_streak3', name: 'Racha de 3 días', icon: '🔥', description: 'Volviste a aprender 3 días distintos.' },
   { id: 'b_streak7', name: 'Racha de 7 días', icon: '💥', description: 'Volviste a aprender 7 días distintos.' },
   { id: 'b_perfect', name: 'Mente Perfecta', icon: '🎯', description: 'Respondiste correctamente a la primera en un mundo completo.' },
+  { id: 'b_project', name: 'Proyecto Hero', icon: '🚀', description: 'Creaste tu propio Proyecto Final de automatización.' },
   { id: 'b_hero', name: 'Zero to Hero', icon: '👑', description: 'Completaste todo el viaje y te convertiste en un Hero de la IA.' }
 ];
+
+// Proyecto Final (capstone): se desbloquea al completar los 5 mundos.
+// Combina en un solo reto todo lo aprendido: dar una buena instrucción,
+// elegir la herramienta correcta, diseñar una automatización y pensar con criterio.
+const FINAL_PROJECT = {
+  id: 'final_project',
+  xp: 30,
+  ideaPlaceholder: 'Ej: Quiero que la IA me ayude a resumir mis notas de clase cada semana...',
+  toolOptions: [
+    'Un asistente de texto (para escribir, resumir o explicar)',
+    'Un generador de imágenes',
+    'Un asistente de voz',
+    'Un asistente que organiza tareas y pendientes'
+  ],
+  triggers: [
+    'empiece mi día',
+    'termine una tarea importante',
+    'reciba información nueva (correos, notas, mensajes)',
+    'sea un momento fijo de la semana',
+    'necesite tomar una decisión rápida'
+  ],
+  actions: [
+    'me dé un resumen claro y corto',
+    'me ayude a organizar lo más urgente primero',
+    'me explique algo difícil de forma simple',
+    'me proponga varias opciones para elegir',
+    'me ayude a revisar si algo tiene errores'
+  ],
+  reflection: {
+    question: 'Antes de confiar por completo en el resultado de tu proyecto, ¿qué deberías hacer?',
+    options: [
+      'Usarlo de inmediato sin revisar nada',
+      'Verificar que la información importante sea correcta antes de actuar',
+      'Compartirlo con todos sin pensarlo',
+      'Ignorarlo, la IA nunca ayuda de verdad'
+    ],
+    correctIndex: 1
+  }
+};
 
 // Rangos según la experiencia (XP) acumulada
 const RANKS = [
@@ -545,6 +585,10 @@ const ROBOT_TIPS = {
   celebrateFinal: [
     '¡{name}, lo lograste! De Zero a Hero, con todo merecido.',
     '¡{name}, ahora sí eres un verdadero Hero de la IA!'
+  ],
+  celebrateProject: [
+    '¡{name}, tu Proyecto Final quedó increíble! Eso sí es pensar como un Hero.',
+    '¡{name}, acabas de diseñar tu primer proyecto real de IA! Estoy orgulloso.'
   ],
   idle: [
     'Consejo: entre más claro seas al pedir algo, mejor te responderá la IA.',

@@ -6,6 +6,12 @@ let currentMissionId = null;
 
 function $(id) { return document.getElementById(id); }
 
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   $(id).classList.add('active');
@@ -104,7 +110,19 @@ function renderMap() {
 
   const certSlot = $('certificate-card-slot');
   certSlot.innerHTML = '';
-  if (allWorldsDone(state)) {
+  if (allWorldsDone(state) && !state.heroProjectDone) {
+    const card = document.createElement('div');
+    card.className = 'world-card';
+    card.style.borderColor = 'var(--amber)';
+    card.innerHTML = `
+      <div class="world-icon" style="background:#fbbf2422; color:#fbbf24">🚀</div>
+      <div class="world-info">
+        <h3>Proyecto Final</h3>
+        <p class="muted">¡Completaste los 5 mundos! Crea tu propio proyecto para recibir tu certificado.</p>
+      </div>`;
+    card.addEventListener('click', goToProject);
+    certSlot.appendChild(card);
+  } else if (state.heroProjectDone) {
     const card = document.createElement('div');
     card.className = 'world-card';
     card.style.borderColor = 'var(--amber)';
@@ -305,10 +323,9 @@ function finishMissionFlow(worldId, missionId) {
     saveState(state);
 
     if (allWorldsDone(state)) {
-      unlockAchievement('b_hero', false);
       saveState(state);
       goToWorld(worldId);
-      showToast('👑', '¡Zero to Hero completo!', robotSay('celebrateFinal', state.name));
+      showToast('🚀', '¡Completaste los 5 mundos!', `${state.name}, ahora te espera tu Proyecto Final. Búscalo en la pantalla de inicio.`);
       return;
     }
 
@@ -382,10 +399,163 @@ $('btn-reset').addEventListener('click', () => {
   showScreen('screen-onboarding');
 });
 
+// ---------------- PROYECTO FINAL ----------------
+
+function goToProject() {
+  renderProject();
+  showScreen('screen-project');
+}
+$('btn-project-back').addEventListener('click', goToMap);
+
+function renderProject() {
+  renderRobot($('project-robot'), state.heroProjectDone ? 'celebrate' : 'thinking', { size: 46 });
+  $('project-intro').textContent = state.heroProjectDone
+    ? `${state.name}, este es el proyecto que diseñaste. ¡Excelente trabajo!`
+    : `Cuéntame, ${state.name}: si pudieras pedirle ayuda a una IA para algo de tu vida real, ¿qué sería?`;
+
+  const container = $('project-form');
+  container.innerHTML = '';
+
+  if (state.heroProjectDone && state.heroProject) {
+    const p = state.heroProject;
+    container.innerHTML = `
+      <div class="builder-box">
+        <p class="muted" style="font-size:12px; margin-bottom:2px;">TU IDEA</p>
+        <p>${escapeHtml(p.idea)}</p>
+        <p class="muted" style="font-size:12px; margin-bottom:2px;">HERRAMIENTA ELEGIDA</p>
+        <p>${escapeHtml(p.tool)}</p>
+        <div class="builder-sentence">Cuando... <b>${escapeHtml(p.trigger)}</b>, entonces la IA debe... <b>${escapeHtml(p.action)}</b>.</div>
+      </div>
+      <button class="btn" id="btn-project-to-cert" style="margin-top:14px;">Ver mi certificado 🏆</button>
+    `;
+    $('btn-project-to-cert').addEventListener('click', goToCertificate);
+    return;
+  }
+
+  const fp = FINAL_PROJECT;
+  container.innerHTML = `
+    <div class="builder-box">
+      <label class="muted" style="font-size:13px;">Tu idea (escribe libremente):</label>
+      <textarea id="project-idea" placeholder="${escapeHtml(fp.ideaPlaceholder)}"></textarea>
+
+      <label class="muted" style="font-size:13px;">¿Qué tipo de herramienta de IA usarías?</label>
+      <select id="project-tool">${fp.toolOptions.map(o => `<option>${o}</option>`).join('')}</select>
+
+      <label class="muted" style="font-size:13px;">Cuando...</label>
+      <select id="project-trigger">${fp.triggers.map(t => `<option>${t}</option>`).join('')}</select>
+      <label class="muted" style="font-size:13px;">entonces la IA debe...</label>
+      <select id="project-action">${fp.actions.map(a => `<option>${a}</option>`).join('')}</select>
+
+      <div class="builder-sentence" id="project-sentence"></div>
+      <button class="btn" id="btn-project-continue" style="margin-top:14px;">Continuar a la reflexión final</button>
+    </div>
+    <div id="project-reflection"></div>
+  `;
+
+  const triggerSel = $('project-trigger');
+  const actionSel = $('project-action');
+  const sentenceEl = $('project-sentence');
+  function updateSentence() {
+    sentenceEl.innerHTML = `Cuando... <b>${triggerSel.value}</b>, entonces la IA debe... <b>${actionSel.value}</b>.`;
+  }
+  triggerSel.addEventListener('change', updateSentence);
+  actionSel.addEventListener('change', updateSentence);
+  updateSentence();
+
+  $('btn-project-continue').addEventListener('click', () => {
+    const idea = $('project-idea').value.trim();
+    if (idea.length < 5) {
+      $('project-idea').focus();
+      renderRobot($('project-robot'), 'oops', { size: 46 });
+      $('project-intro').textContent = `${state.name}, cuéntame con un poco más de detalle tu idea antes de seguir.`;
+      return;
+    }
+    $('btn-project-continue').disabled = true;
+    renderProjectReflection();
+  });
+}
+
+function renderProjectReflection() {
+  const r = FINAL_PROJECT.reflection;
+  const box = $('project-reflection');
+  box.innerHTML = `
+    <div class="speech-bubble" style="margin-top:16px;">
+      <h3 style="margin-top:0;">${r.question}</h3>
+      <div class="quiz-options" id="project-reflection-options"></div>
+      <div id="project-reflection-feedback"></div>
+    </div>
+  `;
+  const optionsEl = $('project-reflection-options');
+  r.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleProjectReflectionAnswer(i, optionsEl));
+    optionsEl.appendChild(btn);
+  });
+  box.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function handleProjectReflectionAnswer(chosenIndex, optionsEl) {
+  const r = FINAL_PROJECT.reflection;
+  const isCorrect = chosenIndex === r.correctIndex;
+  const buttons = optionsEl.querySelectorAll('.quiz-option');
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+    if (i === r.correctIndex) b.classList.add('correct');
+    else if (i === chosenIndex) b.classList.add('incorrect');
+  });
+  const feedback = $('project-reflection-feedback');
+  if (isCorrect) {
+    renderRobot($('project-robot'), 'celebrate', { size: 46 });
+    feedback.innerHTML = `
+      <p style="margin:10px 0 0;"><b>${robotSay('correct', state.name)}</b> Ese es justo el pensamiento crítico de un buen Hero de la IA.</p>
+      <button class="btn" id="btn-project-finish" style="margin-top:14px;">Finalizar mi Proyecto Final 🚀</button>
+    `;
+    $('btn-project-finish').addEventListener('click', finishProject);
+  } else {
+    renderRobot($('project-robot'), 'oops', { size: 46 });
+    feedback.innerHTML = `
+      <p style="margin:10px 0 0;"><b>${robotSay('incorrect', state.name)}</b></p>
+      <button class="btn secondary" id="btn-reflection-retry" style="margin-top:14px;">Intentar de nuevo</button>
+    `;
+    $('btn-reflection-retry').addEventListener('click', renderProjectReflection);
+  }
+}
+
+function finishProject() {
+  const idea = $('project-idea').value.trim();
+  const tool = $('project-tool').value;
+  const trigger = $('project-trigger').value;
+  const action = $('project-action').value;
+
+  state.heroProject = { idea, tool, trigger, action };
+  state.heroProjectDone = true;
+  state.xp += FINAL_PROJECT.xp;
+  unlockAchievement('b_project', false);
+  unlockAchievement('b_hero', false);
+  saveState(state);
+
+  showToast('🚀', '¡Proyecto Final completado!', robotSay('celebrateProject', state.name));
+  renderProject();
+}
+
 // ---------------- CERTIFICADO ----------------
 
 function goToCertificate() {
   $('cert-name').textContent = state.name;
+  const box = $('cert-project-box');
+  if (state.heroProject) {
+    const p = state.heroProject;
+    box.innerHTML = `
+      <div class="builder-box" style="text-align:left; margin-top:16px;">
+        <p class="muted" style="font-size:12px; margin-bottom:4px;">SU PROYECTO FINAL</p>
+        <p style="margin:0 0 8px;">${escapeHtml(p.idea)}</p>
+        <div class="builder-sentence">Cuando... <b>${escapeHtml(p.trigger)}</b>, entonces la IA debe... <b>${escapeHtml(p.action)}</b>.</div>
+      </div>`;
+  } else {
+    box.innerHTML = '';
+  }
   showScreen('screen-certificate');
 }
 $('btn-cert-back').addEventListener('click', goToMap);

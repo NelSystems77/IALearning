@@ -8,6 +8,7 @@ Plataforma web inmersiva, mobile-first, para aprender los fundamentos del uso de
 - **Compañero robot** que saluda, celebra y anima al usuario usando su nombre.
 - **Gamificación**: XP, rangos, rachas de días, insignias coleccionables y un certificado final "Hero".
 - **Constructor visual de automatizaciones** ("Cuando ___, entonces la IA debe ___") sin necesidad de programar.
+- **Proyecto Final (capstone)**: al completar los 5 mundos, el usuario diseña su propio proyecto real (idea propia, herramienta, automatización y una pregunta de pensamiento crítico), que queda reflejado en su certificado.
 - **100% en el navegador**: sin backend ni cuentas. El progreso se guarda en el dispositivo (`localStorage`).
 - **Instalable como app (PWA)**: funciona sin conexión gracias a un service worker.
 
