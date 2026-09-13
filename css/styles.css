@@ -73,6 +73,16 @@ p { line-height: 1.55; color: var(--text); margin: 0 0 12px; }
 
 .muted { color: var(--text-dim); }
 
+.brand-by {
+  margin: 0 0 14px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  opacity: 0.8;
+  font-weight: 600;
+}
+
 /* ---------- Robot mascota ---------- */
 .robot {
   width: 84px;
